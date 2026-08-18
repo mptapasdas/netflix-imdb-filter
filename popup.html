@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root {
+        --bg: #ffffff;
+        --ink: #1a1a1a;
+        --ink-dim: #8a8a8a;
+        --line: #e8e8e8;
+        --red: #e50914;
+        --field-bg: #fafafa;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        width: 280px;
+        margin: 0;
+        padding: 20px;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+      }
+
+      h1 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 0 0 18px;
+        letter-spacing: -0.01em;
+      }
+
+      .field { margin-bottom: 16px; }
+
+      label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--ink-dim);
+        margin-bottom: 6px;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        background: var(--field-bg);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        padding: 8px 9px;
+        font-size: 13px;
+        border-radius: 6px;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      input[type="text"]:focus { border-color: var(--red); }
+
+      .hint {
+        color: var(--ink-dim);
+        font-size: 11px;
+        margin-top: 5px;
+      }
+      .hint a { color: var(--red); text-decoration: none; }
+      .hint a:hover { text-decoration: underline; }
+
+      .dial-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .dial-readout {
+        font-size: 13px;
+        font-weight: 600;
+        min-width: 26px;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      input[type="range"] {
+        flex: 1;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 4px;
+        background: var(--line);
+        border-radius: 2px;
+        outline: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--red);
+        cursor: pointer;
+        transition: transform 0.1s;
+      }
+      input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.15); }
+
+      button#save {
+        width: 100%;
+        padding: 10px;
+        margin-top: 4px;
+        background: var(--ink);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+      button#save:hover { opacity: 0.85; }
+      button#save:active { opacity: 0.7; }
+
+      #status {
+        margin-top: 8px;
+        font-size: 11.5px;
+        color: var(--red);
+        min-height: 14px;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      #status.show { opacity: 1; }
+
+      #usage {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      #usage .usage-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--ink-dim);
+        margin-bottom: 6px;
+      }
+      #usage .usage-label span#usageCount {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      #usage .bar {
+        background: var(--field-bg);
+        border-radius: 3px;
+        height: 5px;
+        overflow: hidden;
+      }
+      #usage .fill {
+        height: 100%;
+        width: 0%;
+        background: var(--red);
+        transition: width 0.4s ease, background 0.3s;
+      }
+      #usage.warn .fill { background: #d99a00; }
+      #usage.danger .fill { background: #c40000; }
+
+      .toggle-row {
+        display: flex;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .toggle-row button {
+        flex: 1;
+        padding: 7px 0;
+        background: var(--bg);
+        border: none;
+        color: var(--ink-dim);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .toggle-row button + button { border-left: 1px solid var(--line); }
+      .toggle-row button.active { background: var(--ink); color: #fff; }
+    </style>
+  </head>
+  <body>
+    <h1>Netflix IMDb Filter</h1>
+
+    <div class="field">
+      <label for="threshold">Hide below rating</label>
+      <div class="dial-row">
+        <input id="threshold" type="range" min="0" max="10" step="0.1" />
+        <span class="dial-readout" id="thVal">7.0</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Low-rated titles</label>
+      <div class="toggle-row">
+        <button id="modeDim" type="button" data-mode="dim">Dim</button>
+        <button id="modeHide" type="button" data-mode="hide">Hide</button>
+      </div>
+    </div>
+
+    <button id="save">Save</button>
+    <div id="status"></div>
+
+    <div id="usage">
+      <div class="usage-label">
+        <span>Lookups today</span>
+        <span><span id="usageCount">0</span> / 100,000</span>
+      </div>
+      <div class="bar"><div id="usageFill" class="fill"></div></div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

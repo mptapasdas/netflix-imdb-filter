@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Netflix IMDb Rating Filter",
+  "version": "1.0.0",
+  "description": "Hides Netflix titles whose IMDb rating is below your chosen threshold.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://www.netflix.com/*",
+    "https://netflix-imdb-proxy.tapasdas.workers.dev/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.netflix.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Netflix IMDb Filter"
+  }
+}
